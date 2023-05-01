@@ -1,6 +1,5 @@
 <?php
 header('Content-Type: application/json');
-
 require("../modelos/Persona.php");
 use Modelos\Persona;
 

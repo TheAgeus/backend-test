@@ -1,27 +1,17 @@
 <?php
 header('Content-Type: application/json');
+require("../modelos/Usuario.php");
+use Modelos\Usuario;
 
-if (empty($_GET['login']) && empty($_GET['logout'])) {
+if (!empty($_POST['user']) && !empty($_POST['pass'])) {
+    echo Usuario::login($_POST['user'], $_POST['pass']);
+    exit();
+}
+
+else {
     echo json_encode(array(
         'estatus' => 404,
-        'mensaje' => 'No se encuentra esa ruta'
-    ));
-    exit();
-}
-
-
-if (!empty($_GET['login'])) {
-    echo json_encode(array(
-        'estatus' => 200,
-        'mensaje' => 'Hola, desde el login'
-    ));
-    exit();
-}
-
-if (!empty($_GET['logout'])) {
-    echo json_encode(array(
-        'estatus' => 200,
-        'mensaje' => 'Hola, desde el logout'
+        'mensaje' => 'Faltan datos'
     ));
     exit();
 }

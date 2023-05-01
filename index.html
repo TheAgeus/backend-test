@@ -9,8 +9,8 @@
 <body>
 
 <form>
-  <input placeholder="usuario" type="text">
-  <input placeholder="contraseña" type="password">
+  <input placeholder="usuario" type="text" id="login_user" name="user">
+  <input placeholder="contraseña" type="password" id="login_pass" name="pass">
   <button id="login_btn">Entrar</button>
 </form>
 
@@ -19,10 +19,10 @@
   const login_btn = document.querySelector('#login_btn')
   login_btn.addEventListener('click', (event) => {
     event.preventDefault();
-
-    
+    login()
   })
 </script>
+<script src="js/login.js"></script>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
