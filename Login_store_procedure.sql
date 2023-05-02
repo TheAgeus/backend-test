@@ -22,8 +22,8 @@ BEGIN
         SET p_token = CONCAT('token_', UUID());
         
         -- Agregar el token a la tabla de tokens
-        INSERT INTO tokens (rol, token)
-        VALUES (v_rol, p_token);
+        INSERT INTO tokens (usuario, token)
+        VALUES (v_usuario_encontrado, p_token);
     END IF;
 
     -- Devolver el token y el rol
@@ -34,7 +34,7 @@ BEGIN
         SET p_rol = NULL;
     END IF;
     
-    SELECT p_rol, p_token;
+    SELECT p_rol, p_token, p_rol;
 END;
 
 $$
