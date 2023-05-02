@@ -18,11 +18,12 @@ class Usuario {
     
             $p_rol = NULL;
             $p_token = NULL;
+            $p_user = NULL;
 
             $stmt = mysqli_prepare($conn, "CALL buscar_usuario_y_contraseña(?, ?)");
             mysqli_stmt_bind_param($stmt, "ss", $user, $password);
             mysqli_stmt_execute($stmt);
-            mysqli_stmt_bind_result($stmt, $p_rol, $p_token);
+            mysqli_stmt_bind_result($stmt, $p_rol, $p_token, $p_user);
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
             mysqli_close($conn);

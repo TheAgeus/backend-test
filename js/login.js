@@ -8,18 +8,19 @@ function login() {
       pass: $('#login_pass').val()
     },
     success: function(response) {
+      console.log(response)
       if (response.estatus == 404) {
         alert(response.mensaje)
       }
       else if (response.estatus == 200) {
         alert(response.mensaje)
-        if(response.rol == 'admin') {
-          window.location.href = "http://sistemasdigitalesapi.test/dashboard.php";
-        }
-        if(response.rol == 'capturista') {
+        if ('token' in response) {
           window.location.href = "http://sistemasdigitalesapi.test/dashboard.php";
         }
       }
+    },
+    error: function(xhr, status, error) {
+      console.log(error)
     }
   })
 }
