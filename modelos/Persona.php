@@ -4,11 +4,13 @@ namespace Modelos;
 use mysqli;
 
 $conn = NULL;
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'personas');
-define('DB_PORT', '3306');
+if (!defined('DB_HOST')) {
+  define('DB_HOST', 'localhost');
+  define('DB_USER', 'root');
+  define('DB_PASSWORD', '');
+  define('DB_NAME', 'personas');
+  define('DB_PORT', '3306');
+}
 
 
 class Persona {
@@ -50,6 +52,42 @@ class Persona {
       ));
     }
     return json_encode($arr);
+  }
+
+  static function capturar($token, $nombre, $edad) {
+    try {
+      $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
+      $conn->set_charset("utf8");
+
+      $res = NULL;
+
+      $stmt = mysqli_prepare($conn, "CALL insertPerson(?, ?, ?)");
+      mysqli_stmt_bind_param($stmt, "sss", $token, $nombre, $edad);
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_bind_result($stmt, $res);
+      mysqli_stmt_fetch($stmt);
+      mysqli_stmt_close($stmt);
+      mysqli_close($conn);
+
+      if (!$res) {
+        return json_encode(array(
+          'estatus' => 404,
+          'mensaje' => 'Credenciales incorrectas'
+        ));
+      }
+      else {
+        return json_encode(array(
+          'estatus' => 200,
+          'mensaje' => 'Persona agregada con estatus CAPTURADO',
+        ));
+      }
+    }
+    catch(Exception $e) {
+      return json_encode(array(
+        'estatus' => 500,
+        'mensaje' => 'Hubo un error en el servidor'
+      ));
+    }
   }
 }
 

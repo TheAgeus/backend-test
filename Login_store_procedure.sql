@@ -42,3 +42,64 @@ $$
 DELIMITER ;
 
 CALL `buscar_usuario_y_contraseña`('ageus', '0309')
+
+
+-- Para sacar el rol en base al token
+DELIMITER $$
+
+CREATE PROCEDURE getRolByToken (
+    IN token VARCHAR(50)
+)
+BEGIN
+    DECLARE res_rol VARCHAR(50);
+    
+    SET res_rol = NULL;
+
+    -- Buscar el usuario y la contraseña en la base de datos
+    SELECT u.rol INTO res_rol
+	 FROM tokens t
+	 JOIN usuarios u ON t.usuario = u.usuario
+	 WHERE t.token = token;
+
+    -- Si el usuario y la contraseña se encontraron, generar un token nuevo
+
+    SELECT res_rol;
+ 
+END;
+
+$$
+
+DELIMITER ;
+
+
+
+-- insert person
+DELIMITER $$
+
+CREATE PROCEDURE insertPerson (
+    IN tokenIN VARCHAR(50),
+    IN nombreIN VARCHAR(50),
+    IN edadIN INT
+)
+BEGIN
+    DECLARE res bool;
+    
+    SET res = NULL;
+
+    -- Buscar el token
+    SELECT COUNT(*) INTO res
+	 FROM tokens
+	 WHERE token = tokenIN;
+
+	 -- Insertar la nueva persona con estatus de CAPTURADO
+ 	 IF res = 1 THEN
+ 	 	INSERT INTO personas (nombre, edad, estatus)
+ 	 	VALUES (nombreIN, edadIN, 'CAPTURADO');
+ 	 END IF;
+ 	 
+ 	 SELECT res;
+END;
+
+$$
+
+DELIMITER ;

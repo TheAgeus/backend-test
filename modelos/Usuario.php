@@ -4,11 +4,13 @@ namespace Modelos;
 use mysqli;
 
 $conn = NULL;
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'personas');
-define('DB_PORT', '3306');
+if (!defined('DB_HOST')) {
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASSWORD', '');
+    define('DB_NAME', 'personas');
+    define('DB_PORT', '3306');
+}
 
 class Usuario {
     static function login($user, $password) {
@@ -53,6 +55,43 @@ class Usuario {
 
     static function logout($token) {
         
+    }
+
+    static function token($token) {
+        try {
+            $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
+            $conn->set_charset("utf8");
+
+            $rol = NULL;
+
+            $stmt = mysqli_prepare($conn, "CALL getRolByToken(?)");
+            mysqli_stmt_bind_param($stmt, "s", $token);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_bind_result($stmt, $rol);
+            mysqli_stmt_fetch($stmt);
+            mysqli_stmt_close($stmt);
+            mysqli_close($conn);
+
+            if (empty($rol)) {
+                return json_encode(array(
+                    'estatus' => 404,
+                    'mensaje' => 'Credenciales incorrectas'
+                ));
+            }
+            else {
+                return json_encode(array(
+                    'estatus' => 200,
+                    'mensaje' => 'credenciales correctas',
+                    'rol' => $rol
+                ));
+            }
+        }
+        catch(Exeption $e) {
+            return json_encode(array(
+                'estatus' => 500,
+                'mensaje' => 'Hubo un error en el servidor'
+            ));
+        }
     }
 }
 
